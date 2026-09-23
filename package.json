@@ -1,0 +1,11 @@
+{
+  "name": "grimsby-institute",
+  "private": true,
+  "version": "2.0.0",
+  "description": "The evolving H-31 inquiry, published on GitHub Pages.",
+  "scripts": {
+    "build": "python3 scripts/build.py",
+    "dev": "python3 -m http.server 8000",
+    "test": "python3 scripts/verify.py"
+  }
+}
