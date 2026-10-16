@@ -32,7 +32,10 @@ for old in (ROOT/'journal').glob('entry-*.html'): old.unlink()
 for i,e in enumerate(entries):
     paragraphs=[]
     for para in e['text'].split('\n\n'):
-        if para.startswith('- '): paragraphs.append('<ul>'+''.join('<li>'+esc(line[2:])+'</li>' for line in para.splitlines())+'</ul>')
+        if para in e.get('illustrations', {}):
+            art=e['illustrations'][para]
+            paragraphs.append(f'<figure class="field-sketch" style="margin:32px 0"><img src="../{esc(art["src"],quote=True)}" alt="{esc(art["alt"],quote=True)}" width="{int(art["width"])}" height="{int(art["height"])}" loading="lazy" style="display:block;width:100%;height:auto;mix-blend-mode:multiply"></figure>')
+        elif para.startswith('- '): paragraphs.append('<ul>'+''.join('<li>'+esc(line[2:])+'</li>' for line in para.splitlines())+'</ul>')
         else: paragraphs.append('<p>'+esc(para)+'</p>')
     prev=f'<a href="entry-{entries[i-1]["number"]:02d}.html">← Entry {entries[i-1]["roman"]}</a>' if i else '<a href="../archive.html">← The Archive</a>'
     nxt=f'<a href="entry-{entries[i+1]["number"]:02d}.html">Entry {entries[i+1]["roman"]} →</a>' if i+1<len(entries) else '<span>Further correspondence awaited.</span>'
