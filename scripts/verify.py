@@ -30,13 +30,17 @@ for e in entries:
     if not e['published']:
         assert not path.exists();continue
     parsed=pages[path.resolve()]
-    actual=normalize(' '.join(parsed.words))
+    actual=normalize(re.sub(r'\s+([.,?!;:])', r'\1', ' '.join(parsed.words)))
     for paragraph in e['text'].split('\n\n'):
         if paragraph in e.get('illustrations', {}):
             art=e['illustrations'][paragraph]
             assert '../'+art['src'] in parsed.links, f'Missing illustration: Entry {e["roman"]}'
             assert paragraph not in actual, 'Illustration marker leaked into published text'
             continue
+        if paragraph == '---':
+            assert '<hr>' in path.read_text()
+            continue
+        paragraph=re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', r'\1', paragraph)
         expected=normalize(re.sub(r'\*\*(.+?)\*\*', r'\1', re.sub(r'^- ','',paragraph,flags=re.M)))
         assert expected in actual,f'Altered journal text: Entry {e["roman"]}'
     assert e['date'] in actual
