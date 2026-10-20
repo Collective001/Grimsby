@@ -37,7 +37,7 @@ for e in entries:
             assert '../'+art['src'] in parsed.links, f'Missing illustration: Entry {e["roman"]}'
             assert paragraph not in actual, 'Illustration marker leaked into published text'
             continue
-        expected=normalize(re.sub(r'^- ','',paragraph,flags=re.M))
+        expected=normalize(re.sub(r'\*\*(.+?)\*\*', r'\1', re.sub(r'^- ','',paragraph,flags=re.M)))
         assert expected in actual,f'Altered journal text: Entry {e["roman"]}'
     assert e['date'] in actual
 home=(ROOT/'index.html').read_text()

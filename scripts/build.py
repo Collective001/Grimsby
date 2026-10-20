@@ -1,5 +1,5 @@
 """Build both supported GitHub Pages roots from one source. No dependencies."""
-import json, html, pathlib, shutil
+import json, html, pathlib, shutil, re
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 esc=html.escape
 entries=sorted([e for e in json.loads((ROOT/'content/journals.json').read_text()) if e.get('published')],key=lambda e:e['number'])
@@ -36,7 +36,7 @@ for i,e in enumerate(entries):
             art=e['illustrations'][para]
             paragraphs.append(f'<figure class="field-sketch" style="margin:32px 0"><img src="../{esc(art["src"],quote=True)}" alt="{esc(art["alt"],quote=True)}" width="{int(art["width"])}" height="{int(art["height"])}" loading="lazy" style="display:block;width:100%;height:auto;mix-blend-mode:multiply"></figure>')
         elif para.startswith('- '): paragraphs.append('<ul>'+''.join('<li>'+esc(line[2:])+'</li>' for line in para.splitlines())+'</ul>')
-        else: paragraphs.append('<p>'+esc(para)+'</p>')
+        else: paragraphs.append('<p>'+re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', esc(para))+'</p>')
     prev=f'<a href="entry-{entries[i-1]["number"]:02d}.html">← Entry {entries[i-1]["roman"]}</a>' if i else '<a href="../archive.html">← The Archive</a>'
     nxt=f'<a href="entry-{entries[i+1]["number"]:02d}.html">Entry {entries[i+1]["roman"]} →</a>' if i+1<len(entries) else '<span>Further correspondence awaited.</span>'
     signature=esc(e['signature']).replace('Elias Grimsby','<span class="name">Elias Grimsby</span>')
