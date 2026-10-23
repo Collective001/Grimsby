@@ -45,8 +45,10 @@ for e in entries:
         assert expected in actual,f'Altered journal text: Entry {e["roman"]}'
     assert e['date'] in actual
 home=(ROOT/'index.html').read_text()
-assert 'October 24, 2026' in home and 'Seven in the Evening' in home
-assert 'Covington, Kentucky' in home
+assert 'The event has been cancelled.' in home
+assert 'necessary test subjects to complete the study' in home
+assert all(x not in home for x in ['Your presence is requested.', 'Kindly confirm attendance', 'Seven in the Evening'])
+assert 'grimsby-cancellation-seen' in home
 assert 'type="password"' not in home
 assert all(x not in home for x in ['PARIS','REVITALIZE','POLYMER','[date]'])
 print(f'PASS: {len(pages)} pages, local links, journal fidelity, launch scope, and mirrored output.')

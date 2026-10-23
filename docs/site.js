@@ -27,7 +27,7 @@
   const close = () => {
     if (closing || !root.classList.contains('entrance-pending')) return;
     closing = true;
-    try { sessionStorage.setItem('grimsby-entered', 'yes'); } catch (_) { /* Admission still works if storage is blocked. */ }
+    try { sessionStorage.setItem('grimsby-cancellation-seen', 'yes'); } catch (_) { /* Admission still works if storage is blocked. */ }
     root.classList.remove('entrance-pending');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       finish();
@@ -62,7 +62,7 @@
   window.addEventListener('pageshow', event => {
     if (!event.persisted) return;
     try {
-      if (sessionStorage.getItem('grimsby-entered') === 'yes') {
+      if (sessionStorage.getItem('grimsby-cancellation-seen') === 'yes') {
         root.classList.remove('entrance-pending', 'entrance-leaving');
         screen.hidden = true;
         folio.inert = false;
